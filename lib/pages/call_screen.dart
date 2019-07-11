@@ -1,3 +1,4 @@
+import 'package:camera_app/pages/camera_screen.dart';
 import 'package:flutter/material.dart';
 
 class CallsScreen extends StatefulWidget {
@@ -10,16 +11,20 @@ class _CallsScreenState extends State<CallsScreen> {
   int count = 0;
   double x1, y1, x2, y2;
   double left, right, top, bottom;
-  CustomPaint boundingbox;
+  Widget boundingbox;
 
   void tapped(BuildContext context, TapDownDetails details) {
     if (this.count == 0) {
+      this.count += 1;
+      setState(
+          () => {this.boundingbox = new Container(color: Colors.transparent)});
+    } else if (this.count == 1) {
       this.count += 1;
       //print('${details.globalPosition}');
       x1 = details.globalPosition.dx;
       y1 = details.globalPosition.dy;
       print("x1,y1:$x1, $y1");
-    } else {
+    } else if (this.count == 2) {
       this.count = 0;
       //print('${details.globalPosition}');
       x2 = details.globalPosition.dx;
@@ -47,10 +52,22 @@ class _CallsScreenState extends State<CallsScreen> {
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: (TapDownDetails details) => {tapped(context, details)},
-      child: boundingbox,
-    );
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (TapDownDetails details) => {tapped(context, details)},
+        child: boundingbox
+        // child: new Stack(children: [
+        //   boundingbox,
+        // new Align(
+        //     alignment: Alignment.bottomRight,
+        //     child: new Container(
+        //         margin: EdgeInsets.all(20.0),
+        //         child: new FloatingActionButton(
+        //           backgroundColor: Theme.of(context).accentColor,
+        //           child: new Icon(Icons.check_box_outline_blank),
+        //           onPressed: () => print("take photo"),
+        //         ))),
+        // ]),
+        );
   }
 }
 

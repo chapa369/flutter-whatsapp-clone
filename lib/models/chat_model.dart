@@ -10,7 +10,8 @@ class ChatModel {
 List<ChatModel> dummyData = [
   new ChatModel(
       name: "Hironori Matsumoto",
-      message: "amazing",
+      message: "Hello",
       time: "15:30",
-      avatarUrl: ""),
+      avatarUrl:
+          "https://img.icons8.com/material-two-tone/24/000000/delete-link.png"),
 ];

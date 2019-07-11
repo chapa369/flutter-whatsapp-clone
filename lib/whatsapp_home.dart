@@ -43,7 +43,7 @@ class _WhatsAppHomeState extends State<WhatsAppHome>
               text: "Status",
             ),
             new Tab(
-              text: "Calls",
+              text: "DrawRectangle",
             )
           ],
         ),
@@ -58,17 +58,11 @@ class _WhatsAppHomeState extends State<WhatsAppHome>
       body: new TabBarView(
         controller: _tabController,
         children: <Widget>[
-          new Stack(
-              children: [new CameraScreen(widget.cameras), new StatusScreen()]),
+          new CameraScreen(widget.cameras),
           new ChatScreen(),
           new StatusScreen(),
           new CallsScreen()
         ],
-      ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Theme.of(context).accentColor,
-        child: new Icon(Icons.message),
-        onPressed: () => print("open chats"),
       ),
     );
   }
