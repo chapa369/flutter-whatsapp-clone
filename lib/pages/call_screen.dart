@@ -17,7 +17,7 @@ class MyPainter extends CustomPainter {
   Color lineColor;
   double width;
   MyPainter({this.lineColor, this.width});
-  var rect = Rect.fromLTRB(30, 30, 200, 200);
+  var rect = Rect.fromLTRB(30, 30, 400, 500);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -26,10 +26,6 @@ class MyPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
       ..strokeWidth = width;
-    Offset center = new Offset(size.width / 2, size.height / 2);
-    double radius = min(size.width / 2, size.height / 2);
-
-    canvas.drawCircle(center, radius, line);
     canvas.drawRect(rect, line);
   }
 
