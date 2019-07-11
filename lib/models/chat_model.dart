@@ -9,5 +9,8 @@ class ChatModel {
 
 List<ChatModel> dummyData = [
   new ChatModel(
-      name: "Pawan Kumar", message: "amazing", time: "15:30", avatarUrl: ""),
+      name: "Hironori Matsumoto",
+      message: "amazing",
+      time: "15:30",
+      avatarUrl: ""),
 ];
