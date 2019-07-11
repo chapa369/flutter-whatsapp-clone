@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class StatusScreen extends StatefulWidget {
@@ -14,7 +12,7 @@ class _StatusScreenState extends State<StatusScreen> {
   double left, right, top, bottom;
   Container boundingbox;
 
-  Container tapped(BuildContext context, TapDownDetails details) {
+  void tapped(BuildContext context, TapDownDetails details) {
     if (this.count == 0) {
       this.count += 1;
       //print('${details.globalPosition}');
