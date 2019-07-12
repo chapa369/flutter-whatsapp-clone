@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import './call_screen.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:simple_permissions/simple_permissions.dart';
+import 'dart:io';
 
 class CameraScreen extends StatefulWidget {
   List<CameraDescription> cameras;
@@ -13,6 +17,7 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   CameraController controller;
+  Future<void> initializeControllerFuture;
   double margin;
   int count = 0;
   double x1, y1, x2, y2;
@@ -57,12 +62,9 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
     controller =
         new CameraController(widget.cameras[0], ResolutionPreset.medium);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+    initializeControllerFuture = controller.initialize();
+
+    setState(() => {});
   }
 
   @override
@@ -74,6 +76,7 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
+      print("not initialized");
       return new Container();
     }
     return new Column(children: [
@@ -83,16 +86,6 @@ class _CameraScreenState extends State<CameraScreen> {
               behavior: HitTestBehavior.opaque,
               onTapDown: (TapDownDetails details) => {tapped(context, details)},
               child: new Stack(children: [
-                // new ClipRect(
-                //   child: OverflowBox(
-                //     alignment: Alignment.center,
-                //     child: FittedBox(
-                //       fit: BoxFit.fitWidth,
-                //       child:
-                //           CameraPreview(controller), // this is my CameraPreview
-                //     ),
-                //   ),
-                // ),
                 CameraPreview(controller),
                 new Container(
                   color: Colors.transparent,
@@ -107,7 +100,59 @@ class _CameraScreenState extends State<CameraScreen> {
                 child: new FloatingActionButton(
                   backgroundColor: Theme.of(context).accentColor,
                   child: new Icon(Icons.camera_alt),
-                  onPressed: () => print("take photo"),
+                  onPressed: () async {
+                    // Take the Picture in a try / catch block. If anything goes wrong,
+                    // catch the error.
+                    print("button pressed");
+                    try {
+                      // Ensure that the camera is initialized.
+                      await initializeControllerFuture;
+
+                      // パーミッションの確認・要求
+                      if (Platform.isAndroid &&
+                          !await SimplePermissions.checkPermission(
+                              Permission.WriteExternalStorage)) {
+                        SimplePermissions.requestPermission(
+                            Permission.WriteExternalStorage);
+                      } else if (Platform.isIOS &&
+                          !await SimplePermissions.checkPermission(
+                              Permission.PhotoLibrary)) {
+                        SimplePermissions.requestPermission(
+                            Permission.PhotoLibrary);
+                      }
+
+                      // Construct the path where the image should be saved using the path
+                      // package.
+                      final path = join(
+                        // Store the picture in the temp directory.
+                        // Find the temp directory using the `path_provider` plugin.
+                        (await getTemporaryDirectory()).path,
+                        '${DateTime.now()}.jpg',
+                      );
+
+                      // Attempt to take a picture and log where it's been saved.
+
+//保存
+                      final Directory extDir =
+                          await getExternalStorageDirectory(); // 外部領域
+                      final String dirPath =
+                          '${extDir.path}/Pictures/flutter_test';
+                      await Directory(dirPath).create(recursive: true);
+                      final String filePath = '$dirPath/${DateTime.now()}.jpg';
+
+                      if (controller.value.isTakingPicture) {
+                        print("return null");
+                        return null;
+                      }
+
+                      await controller.takePicture(filePath);
+                      print(filePath);
+                      print("take picture");
+                    } catch (e) {
+                      // If an error occurs, log the error to the console.
+                      print(e);
+                    }
+                  },
                 ))),
         Align(
             alignment: Alignment.center,

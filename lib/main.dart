@@ -1,4 +1,3 @@
-import 'package:camera_app/pages/camera_screen.dart';
 import 'package:camera_app/whatsapp_home.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -7,7 +6,7 @@ List<CameraDescription> cameras;
 
 Future<Null> main() async {
   cameras = await availableCameras();
-  runApp(new MyApp());
+  await runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
