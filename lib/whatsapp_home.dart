@@ -29,41 +29,8 @@ class _WhatsAppHomeState extends State<WhatsAppHome>
       appBar: new AppBar(
         title: new Text("cameraApp"),
         elevation: 0.7,
-        bottom: new TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          tabs: <Widget>[
-            new Tab(
-              icon: new Icon(Icons.camera_alt),
-            ),
-            new Tab(
-              text: "Chats",
-            ),
-            new Tab(
-              text: "Status",
-            ),
-            new Tab(
-              text: "DrawRectangle",
-            )
-          ],
-        ),
-        actions: <Widget>[
-          new Icon(Icons.search),
-          new Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          ),
-          new Icon(Icons.more_vert)
-        ],
       ),
-      body: new TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          new CameraScreen(widget.cameras),
-          new ChatScreen(),
-          new StatusScreen(),
-          new CallsScreen()
-        ],
-      ),
+      body: new CameraScreen(widget.cameras),
     );
   }
 }

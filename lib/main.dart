@@ -1,5 +1,6 @@
+import 'package:camera_app/pages/camera_screen.dart';
+import 'package:camera_app/whatsapp_home.dart';
 import 'package:flutter/material.dart';
-import './whatsapp_home.dart';
 import 'package:camera/camera.dart';
 
 List<CameraDescription> cameras;

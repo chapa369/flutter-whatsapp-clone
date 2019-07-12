@@ -33,8 +33,8 @@ class _CameraScreenState extends State<CameraScreen> {
       y2 = details.globalPosition.dy;
       left = (x1 <= x2) ? x1 : x2;
       right = (x1 <= x2) ? x2 : x1;
-      top = (y1 <= y2) ? y1 - 130 : y2 - 130;
-      bottom = (y1 <= y2) ? y2 - 130 : y1 - 130;
+      top = (y1 <= y2) ? y1 - 85 : y2 - 85;
+      bottom = (y1 <= y2) ? y2 - 85 : y1 - 85;
 
       print("x2,y2:$x2, $y2");
       setState(() => {
@@ -61,7 +61,7 @@ class _CameraScreenState extends State<CameraScreen> {
       if (!mounted) {
         return;
       }
-      //setState(() {});
+      setState(() {});
     });
   }
 
@@ -83,6 +83,16 @@ class _CameraScreenState extends State<CameraScreen> {
               behavior: HitTestBehavior.opaque,
               onTapDown: (TapDownDetails details) => {tapped(context, details)},
               child: new Stack(children: [
+                // new ClipRect(
+                //   child: OverflowBox(
+                //     alignment: Alignment.center,
+                //     child: FittedBox(
+                //       fit: BoxFit.fitWidth,
+                //       child:
+                //           CameraPreview(controller), // this is my CameraPreview
+                //     ),
+                //   ),
+                // ),
                 CameraPreview(controller),
                 new Container(
                   color: Colors.transparent,
