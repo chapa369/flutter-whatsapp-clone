@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'pages/camera_screen.dart';
 
 class WhatsAppHome extends StatefulWidget {
+  String _label;
   var cameras;
-  WhatsAppHome(this.cameras);
+  WhatsAppHome(this._label, this.cameras);
 
   @override
   _WhatsAppHomeState createState() => _WhatsAppHomeState();
@@ -15,14 +16,6 @@ class WhatsAppHome extends StatefulWidget {
 
 class _WhatsAppHomeState extends State<WhatsAppHome>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    _tabController = new TabController(vsync: this, initialIndex: 1, length: 4);
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
