@@ -1,4 +1,3 @@
-import 'package:camera_app/input_label.dart';
 import 'package:camera_app/cameraapp_home.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';

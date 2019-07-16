@@ -1,20 +1,16 @@
-import 'package:camera_app/pages/call_screen.dart';
-import 'package:camera_app/pages/chat_screen.dart';
-import 'package:camera_app/pages/status_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/camera_screen.dart';
 
-class WhatsAppHome extends StatefulWidget {
-  String _label;
+class CameraAppHome extends StatefulWidget {
   var cameras;
-  WhatsAppHome(this._label, this.cameras);
+  CameraAppHome(this.cameras);
 
   @override
-  _WhatsAppHomeState createState() => _WhatsAppHomeState();
+  _CameraAppHomeState createState() => _CameraAppHomeState();
 }
 
-class _WhatsAppHomeState extends State<WhatsAppHome>
+class _CameraAppHomeState extends State<CameraAppHome>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
