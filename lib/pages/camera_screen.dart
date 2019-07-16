@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import './call_screen.dart';
+import './painter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';

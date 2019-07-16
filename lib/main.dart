@@ -1,5 +1,5 @@
 import 'package:camera_app/input_label.dart';
-import 'package:camera_app/whatsapp_home.dart';
+import 'package:camera_app/cameraapp_home.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
           primaryColor: new Color(0xff075E54),
           accentColor: new Color(0xff25D366)),
-      home: new InputLabel(cameras),
+      home: new CameraAppHome(cameras),
     );
   }
 }
