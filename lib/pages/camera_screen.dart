@@ -57,7 +57,7 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-  void writeBox(filePath) {
+  void writeBox(BuildContext context, String filePath) {
     final file = File(filePath + ".json");
     final fileNameList = filePath.split("/");
     final fileName = fileNameList[fileNameList.length - 1];
@@ -65,11 +65,24 @@ class _CameraScreenState extends State<CameraScreen> {
     final leftInt = this.left.toInt();
     final width = (this.right - this.left).toInt();
     final height = (this.bottom - this.top).toInt();
+    print(topInt);
+
+    //横向きで使う想定なので、以下でx軸とy軸が入れ替わる。(widthとheightが反対に)
+    final topIntResize = (((MediaQuery.of(context).size.width)) - this.right) *
+        640 /
+        (MediaQuery.of(context).size.width);
+    final leftIntResize =
+        (topInt - 65) * 640 / (MediaQuery.of(context).size.width);
+    print(leftIntResize);
+    final widthResize =
+        (height * 640 / (MediaQuery.of(context).size.width)).toInt();
+    final heightResize =
+        (width * 640 / (MediaQuery.of(context).size.width)).toInt();
 
     final box = '''{\n
       "file": "$fileName.jpg",\n
       "image_size": [{"width": 640, "height": 640, "depth": 3}],\n
-      "annotations": [{"class_id": 1, "top": $topInt, "left": $leftInt, "width": $width, "height": $height}]\n
+      "annotations": [{"class_id": 1, "top": $topIntResize, "left": $leftIntResize, "width": $widthResize, "height": $heightResize}]\n
 }''';
 
     return file.writeAsStringSync(box);
@@ -96,6 +109,9 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.width);
+    print(controller.value.aspectRatio);
+
     if (!controller.value.isInitialized) {
       print("not initialized");
       return new Container(
@@ -105,7 +121,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
     return new Column(children: [
       new AspectRatio(
-          aspectRatio: 1, //controller.value.aspectRatio,
+          aspectRatio: controller.value.aspectRatio,
           child: new GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTapDown: (TapDownDetails details) => {tapped(context, details)},
@@ -114,80 +130,92 @@ class _CameraScreenState extends State<CameraScreen> {
                 new Container(
                   color: Colors.transparent,
                   child: boundingbox,
+                ),
+                new Align(
+                  alignment: Alignment.topLeft,
+                  child: new CustomPaint(
+                    foregroundPainter: new RestrictArea(
+                        lineColor: Colors.red,
+                        left: 0,
+                        top: 65,
+                        right: MediaQuery.of(context).size.width,
+                        bottom: 483),
+                  ),
                 )
               ]))),
-      Row(children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: new Container(
-                margin: EdgeInsets.all(20.0),
-                child: new FloatingActionButton(
-                  backgroundColor: Theme.of(context).accentColor,
-                  child: new Icon(Icons.camera_alt),
-                  onPressed: () async {
-                    // Take the Picture in a try / catch block. If anything goes wrong,
-                    // catch the error.
-                    print("button pressed");
-                    try {
-                      // Ensure that the camera is initialized.
-                      await initializeControllerFuture;
+      SizedBox(
+          height: 50,
+          width: MediaQuery.of(context).size.width,
+          child: Row(children: [
+            Expanded(
+                child: new Container(
+                    margin: EdgeInsets.all(0),
+                    child: new FloatingActionButton(
+                      backgroundColor: Theme.of(context).accentColor,
+                      child: new Icon(Icons.camera_alt),
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        print("button pressed");
+                        try {
+                          // Ensure that the camera is initialized.
+                          await initializeControllerFuture;
 
-                      // パーミッションの確認・要求
-                      if (Platform.isAndroid &&
-                          !await SimplePermissions.checkPermission(
-                              Permission.WriteExternalStorage)) {
-                        SimplePermissions.requestPermission(
-                            Permission.WriteExternalStorage);
-                      } else if (Platform.isIOS &&
-                          !await SimplePermissions.checkPermission(
-                              Permission.PhotoLibrary)) {
-                        SimplePermissions.requestPermission(
-                            Permission.PhotoLibrary);
-                      }
+                          // パーミッションの確認・要求
+                          if (Platform.isAndroid &&
+                              !await SimplePermissions.checkPermission(
+                                  Permission.WriteExternalStorage)) {
+                            SimplePermissions.requestPermission(
+                                Permission.WriteExternalStorage);
+                          } else if (Platform.isIOS &&
+                              !await SimplePermissions.checkPermission(
+                                  Permission.PhotoLibrary)) {
+                            SimplePermissions.requestPermission(
+                                Permission.PhotoLibrary);
+                          }
 
-                      // Attempt to take a picture and log where it's been saved.
-                      final Directory extDir =
-                          await getExternalStorageDirectory(); // 外部領域
-                      final String dirPath =
-                          '${extDir.path}/Pictures/flutter_camera';
-                      var now = new DateTime.now();
-                      var formatter = new DateFormat("yyyyMMdd-HHmmss");
-                      var formatted = formatter.format(now);
-                      await Directory(dirPath).create(recursive: true);
-                      final String filePath = '$dirPath/$formatted';
-                      final String filePathImg = '$dirPath/$formatted.jpg';
+                          // Attempt to take a picture and log where it's been saved.
+                          final Directory extDir =
+                              await getExternalStorageDirectory(); // 外部領域
+                          final String dirPath =
+                              '${extDir.path}/Pictures/flutter_camera';
+                          var now = new DateTime.now();
+                          var formatter = new DateFormat("yyyyMMdd-HHmmss");
+                          var formatted = formatter.format(now);
+                          await Directory(dirPath).create(recursive: true);
+                          final String filePath = '$dirPath/$formatted';
+                          final String filePathImg = '$dirPath/$formatted.jpg';
 
-                      if (controller.value.isTakingPicture) {
-                        print("return null");
-                        return null;
-                      }
+                          if (controller.value.isTakingPicture) {
+                            print("return null");
+                            return null;
+                          }
 
-                      await controller.takePicture(filePathImg);
-                      print("picture is taken");
+                          await controller.takePicture(filePathImg);
+                          print("picture is taken");
 
-                      await writeBox(filePath);
-                    } catch (e) {
-                      // If an error occurs, log the error to the console.
-                      print(e);
-                    }
-                  },
-                ))),
-        Align(
-            alignment: Alignment.center,
-            child: new Container(
-                margin: EdgeInsets.all(20.0),
-                child: new FloatingActionButton(
-                  backgroundColor: Theme.of(context).accentColor,
-                  child: new Icon(Icons.check_box_outline_blank),
-                  onPressed: () => {
-                        setState(() => {
-                              boundingbox =
-                                  new Container(color: Colors.transparent)
-                            }),
-                        this.count = 1
+                          await writeBox(context, filePath);
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
+                        }
                       },
-                ))),
-      ]),
+                    ))),
+            Expanded(
+                child: new Container(
+                    margin: EdgeInsets.all(0.0),
+                    child: new FloatingActionButton(
+                      backgroundColor: Theme.of(context).accentColor,
+                      child: new Icon(Icons.check_box_outline_blank),
+                      onPressed: () => {
+                            setState(() => {
+                                  boundingbox =
+                                      new Container(color: Colors.transparent)
+                                }),
+                            this.count = 1
+                          },
+                    ))),
+          ])),
     ]);
   }
 }

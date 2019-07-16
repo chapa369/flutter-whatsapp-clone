@@ -44,6 +44,7 @@ class _InputLabelState extends State<InputLabel> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
+        resizeToAvoidBottomPadding: true,
         appBar: new AppBar(
           title: new Text("Annotation box camera"),
         ),
