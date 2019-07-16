@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'pages/camera_screen.dart';
 
 class CameraAppHome extends StatefulWidget {
-  var cameras;
+  final cameras;
   CameraAppHome(this.cameras);
 
   @override

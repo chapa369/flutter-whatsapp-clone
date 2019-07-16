@@ -65,7 +65,6 @@ class _CameraScreenState extends State<CameraScreen> {
     final leftInt = this.left.toInt();
     final width = (this.right - this.left).toInt();
     final height = (this.bottom - this.top).toInt();
-    print(topInt);
 
     //横向きで使う想定なので、以下でx軸とy軸が入れ替わる。(widthとheightが反対に)
     final topIntResize = (((MediaQuery.of(context).size.width)) - this.right) *
@@ -73,7 +72,7 @@ class _CameraScreenState extends State<CameraScreen> {
         (MediaQuery.of(context).size.width);
     final leftIntResize =
         (topInt - 65) * 640 / (MediaQuery.of(context).size.width);
-    print(leftIntResize);
+
     final widthResize =
         (height * 640 / (MediaQuery.of(context).size.width)).toInt();
     final heightResize =
@@ -96,7 +95,7 @@ class _CameraScreenState extends State<CameraScreen> {
         new CameraController(widget.cameras[0], ResolutionPreset.medium);
 
     initializeControllerFuture = controller.initialize();
-    print("camera controller initialized");
+
     print(controller.value.isInitialized);
   }
 
@@ -104,7 +103,6 @@ class _CameraScreenState extends State<CameraScreen> {
   void dispose() {
     controller?.dispose(); //? is checking if controller is null or not
     super.dispose();
-    print("camera controller disposed");
   }
 
   @override
@@ -187,7 +185,6 @@ class _CameraScreenState extends State<CameraScreen> {
                           final String filePathImg = '$dirPath/$formatted.jpg';
 
                           if (controller.value.isTakingPicture) {
-                            print("return null");
                             return null;
                           }
 
