@@ -16,7 +16,7 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 # 諸々の注意点
-使用上の注意は３つ！すべて松本のコーディング力不足に由来するものです！（土下座）
+使用上の注意は３つ！すべて僕のコーディング力不足に由来するものです！（土下座）
 
 - バウンディングボックスの座標などを考慮するのが大変だったので、Nexus 6に対応した座標をハードコーディングしています。
 なので、別機種でこのアプリを使用する場合には細かな調整が必要になるかもしれません。というか、なります。
